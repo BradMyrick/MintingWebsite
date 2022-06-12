@@ -4,9 +4,20 @@ import { connect } from "./redux/blockchain/blockchainActions";
 import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
+import Box from '@mui/material/Box';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+
 
 const truncate = (input, len) =>
   input.length > len ? `${input.substring(0, len)}...` : input;
+
 
 export const StyledButton = styled.button`
   padding: 10px;
@@ -22,8 +33,8 @@ export const StyledButton = styled.button`
   -webkit-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
   -moz-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
   :active {
-    box-shadow: none;
-    -webkit-box-shadow: none;
+    box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
+    -webkit-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
     -moz-box-shadow: none;
   }
 `;
@@ -125,11 +136,13 @@ function App() {
     let gasLimit = CONFIG.GAS_LIMIT;
     let totalCostWei = String(cost * mintAmount);
     let totalGasLimit = String(gasLimit * mintAmount);
+
     console.log("Cost: ", totalCostWei);
     console.log("Gas limit: ", totalGasLimit);
     setFeedback(`Minting your ${CONFIG.NFT_NAME}...`);
     setClaimingNft(true);
     blockchain.smartContract.methods
+      
       .mint(mintAmount)
       .send({
         gasLimit: String(totalGasLimit),
@@ -193,29 +206,49 @@ function App() {
     getData();
   }, [blockchain.account]);
 
-  /* When the user clicks on the button, 
-  toggle between hiding and showing the dropdown content */
-  function myFunction() {
-    // toggle show list
-    document.getElementById("myDropdown").classList.toggle("show");
+  const [state, setState] = React.useState({
+    right: false,
+  });
 
-  }
-  
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event &&
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
+
+    setState({ ...state, ["right"]: open });
+  };
+
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      role="presentation"
+      onClick={toggleDrawer( false)}
+      onKeyDown={toggleDrawer( false)}
+    >
+      <List>
+        {['Add to Whitelist', 'Start WL Mint', 'Start Public Mint', 'Reveal NFTs'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+    </Box>
+  );
+  const Contract_Owner = CONFIG.CONTRACT_OWNERS;
   return (
     <s.Screen>
     <div class="navbar" id="myNavbar">
-      <a href="#home">Home</a>
-      <a href="#news">News</a>
-      <div class="dropdown">
-      <button class="dropbtn" onclick= {myFunction}>Dropdown
-        <i class="fa fa-caret-down"></i>
-      </button>
-      <div class="dropdown-content" id="myDropdown">
-        <a href="#">Link 1</a>
-        <a href="#">Link 2</a>
-        <a href="#">Link 3</a>
-      </div>
-      </div> 
+      <a href="#home">HQ</a>
+      <a href="#news">Marketplace</a>
     </div>
       <s.Container
         flex={1}
@@ -403,14 +436,36 @@ function App() {
               boxShadow: "0px 5px 11px 2px rgba(0,0,0,0.7)",
             }}
           >
-            <div class="dropdown" style={{ display: "flex" }}>
-              <button onclick={() => myFunction()} class="dropbtn">Owner Menu</button>
-              <div id="myDropdown" class="dropdown-content">
-                <a href="#home">Add to WhiteList</a>
-                <a href="#about">Start WL Sale</a>
-                <a href="#contact">Start Public Sale</a>
-              </div>
-            </div>
+              {['Owner Menu'].map((item, index) => (
+                <React.Fragment key={"left"}>
+                {blockchain.account === Contract_Owner || null === null ? (
+                  <Button onClick={toggleDrawer( true)} style={{color:"var(--secondary)"}}>Owner Menu</Button>
+                  ):null}
+                    <SwipeableDrawer
+                      anchor={"right"}
+                      open={state["right"]}
+                      onClose={toggleDrawer( false)}
+                      onOpen={toggleDrawer( true)}
+                    >
+                      {list("right")}
+                    </SwipeableDrawer>
+                  <Divider />
+                  <Divider />
+                  <StyledLink target={"_blank"} href={CONFIG.MARKETPLACE_LINK}>
+                    Discord
+                  </StyledLink>
+                  <Divider />
+                  <Divider />
+                  <StyledLink target={"_blank"} href={CONFIG.MARKETPLACE_LINK}>
+                    Twitter
+                  </StyledLink>
+                  <Divider />
+                  <Divider />
+                  <StyledLink target={"_blank"} href={CONFIG.MARKETPLACE_LINK}>
+                    Website
+                  </StyledLink>
+                </React.Fragment>
+              ))}
           </s.Container>
         </ResponsiveWrapper>
         <s.SpacerMedium />

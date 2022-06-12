@@ -1,10 +1,11 @@
 {
-  "CONTRACT_ADDRESS": "0x827acb09a2dc20e39c9aad7f7190d9bc53534192",
-  "SCAN_LINK": "https://avaxscan.com/token/0x827acb09a2dc20e39c9aad7f7190d9bc53534192",
+  "CONTRACT_ADDRESS": "0xA5EB1b8bfe6dC9706Ea9D9AFaFE18615051C304F",
+  "CONTRACT_OWNER": "0xFB9288e34e8516424c3b39DDeC4ca4A0ef4af3ce",
+  "SCAN_LINK": "https://testnet.snowtrace.io/",
   "NETWORK": {
     "NAME": "Avalanche",
-    "SYMBOL": "Avax",
-    "ID": 137
+    "SYMBOL": "AVAX",
+    "ID": 43113
   },
   "NFT_NAME": "Tacvue Test Token",
   "SYMBOL": "TVT",
@@ -12,7 +13,7 @@
   "WEI_COST": 750000000000000000,
   "DISPLAY_COST": 0.75,
   "GAS_LIMIT": 285000,
-  "MARKETPLACE": "Opeansea",
-  "MARKETPLACE_LINK": "https://opensea.io/collection/nerdy-coder-clones",
+  "MARKETPLACE": "Tacvue",
+  "MARKETPLACE_LINK": "https://tacvue.io",
   "SHOW_BACKGROUND": true
 }
